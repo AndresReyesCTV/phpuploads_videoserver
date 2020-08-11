@@ -1,0 +1,111 @@
+
+.sprite-img.upCloud.white {
+    background: url('../css/../img/sprites/ico_sprite_all.png?1508274171') -125px -1250px no-repeat;
+}
+
+
+.fileinput-btn > input {
+    cursor: pointer;
+    direction: ltr;
+    font-size: 50px;
+    margin: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(-800px, 0px) scale(4);
+    -ms-transform: translate(-800px, 0px) scale(4);
+    -moz-transform: translate(-800px, 0px) scale(4);
+    -webkit-transform: translate(-800px, 0px) scale(4);
+    -o-transform: translate(-800px, 0px) scale(4);
+    width: auto;
+    height : 14px;
+}
+input:hover, textarea:hover, select:hover {
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+}
+select, input[type="file"] {
+    line-height: 28px;
+}
+input[type="file"] {
+    opacity: 0;
+}
+label input, label textarea, label select {
+    display: block;
+}
+input, textarea, select {
+    height: 34px;
+    background: white;
+        background-clip: border-box;
+    color: #666;
+    margin: 0;
+    font-size: 12px;
+    padding: 8px 10px 6px 10px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 2px solid #D1D1D1;
+    -moz-transition: all .1s linear;
+    -o-transition: all .1s linear;
+    -webkit-transition: all .1s linear;
+    transition: all .1s linear;
+    -moz-transition: box-shadow .1s linear;
+    -o-transition: box-shadow .1s linear;
+    -webkit-transition: box-shadow .1s linear;
+    transition: box-shadow .1s linear;
+}
+input, select {
+    display: inline-block;
+    background-color: #f6f6f6;
+    height: 16px;
+    padding: 4px;
+    margin-bottom: 9px;
+    color: #666;
+    border: 1px solid #ddd;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+label, input, button, select, textarea, legend {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+}
+button, input {
+    *overflow: visible;
+    line-height: normal;
+}
+button, input, select, textarea {
+    margin: 0;
+    font-size: 100%;
+    vertical-align: middle;
+}
+*, ::after, ::before {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.btn.primary:hover, .btn.primary:active, .btn.danger:hover, .btn.danger:active {
+    color: #fff;
+}
+.btn.big {
+    font-size: 14.4px;
+}
+.btn.primary {
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+.btn:hover, .btn:focus {
+    color: #333;
+}
+.btn {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+}
