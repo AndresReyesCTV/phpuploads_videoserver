@@ -12,4 +12,3 @@ define('UPATH', DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR);
 $up = new \apimediator\ChunkUploadHandler(UPATH);
 
 $up->requestDeletion();
-
