@@ -84,80 +84,84 @@ class ChunkUploadHandler
      */
     public function passToApi()
     {
-
-        //var_dump($_REQUEST);
-        //die;
-        $idInst    = $_REQUEST['idInstitution'];
-        $shortName = $_REQUEST['shortname'];
-        $userId    = $_REQUEST['ui'];
-        $username  = base64_decode($_REQUEST['un']);
-        $usermail  = base64_decode($_REQUEST['um']);
-        $courseUrl = $_REQUEST['cc'];
-        $S3_provider = 5; /* Id of the S3 provider in CTV webApp */
-
-        $userPart = "";
-        $name  = $_REQUEST['filename'];
-        $data = array(
-            "id"        => $idInst,
-            "filename"  => $name,
-            "tempfile"  => $this->path . $name,
-            "shortname" => $shortName,
-            "videoservice_storage_provider" => $S3_provider,
-        );
-
-        if (!empty($userId)) {
-            $userId = intval($userId);
-            $userPart .= "userid/{$userId}/";
-        }
-        if (!empty($username)) {
-            $username = urlencode($username);
-            $userPart .= "username/{$username}/";
-        }
-        if (!empty($usermail)) {
-            $usermail = urlencode($usermail);
-            $userPart .= "usermail/{$usermail}/";
-        }
-        if (!empty($usermail)) {
-            $usermail = ($courseUrl);
-            $userPart .= "course/{$courseUrl}/";
-        }
-
-        //$uri  = "http://192.168.55.10:3000/api/v1/institutions/{$idInst}/{$userPart}video/upload";
-        $uri  = "http://video.classroomtv.com/api/v1/institutions/{$idInst}/{$userPart}video/upload";
-        //die($uri);
-
         try {
-            file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. URI.  ' . $uri . " \n", FILE_APPEND);
-            file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. DATA. ' . json_encode($data) . " \n", FILE_APPEND);
+            //var_dump($_REQUEST);
+            //die;
+            $idInst    = $_REQUEST['idInstitution'];
+            $shortName = $_REQUEST['shortname'];
+            $userId    = $_REQUEST['ui'];
+            $username  = base64_decode($_REQUEST['un']);
+            $usermail  = base64_decode($_REQUEST['um']);
+            $courseUrl = $_REQUEST['cc'];
+            $S3_provider = 5; /* Id of the S3 provider in CTV webApp */
+
+            $userPart = "";
+            $name  = $_REQUEST['filename'];
+            $data = array(
+                "id"        => $idInst,
+                "filename"  => $name,
+                "tempfile"  => $this->path . $name,
+                "shortname" => $shortName,
+                "videoservice_storage_provider" => $S3_provider,
+            );
+
+            if (!empty($userId)) {
+                $userId = intval($userId);
+                $userPart .= "userid/{$userId}/";
+            }
+            if (!empty($username)) {
+                $username = urlencode($username);
+                $userPart .= "username/{$username}/";
+            }
+            if (!empty($usermail)) {
+                $usermail = urlencode($usermail);
+                $userPart .= "usermail/{$usermail}/";
+            }
+            if (!empty($usermail)) {
+                $usermail = ($courseUrl);
+                $userPart .= "course/{$courseUrl}/";
+            }
+
+            //$uri  = "http://192.168.55.10:3000/api/v1/institutions/{$idInst}/{$userPart}video/upload";
+            $uri  = "http://video.classroomtv.com/api/v1/institutions/{$idInst}/{$userPart}video/upload";
+            //die($uri);
+
+            try {
+                file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. URI.  ' . $uri . " \n", FILE_APPEND);
+                file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. DATA. ' . json_encode($data) . " \n", FILE_APPEND);
+            } catch (\Exception $e) {
+            }
+
+            $content = json_encode($data);
+            //die($content);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type:multipart/form-data"
+            ));
+
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $info   = curl_getinfo($ch);
+
+            $res    = json_decode($result);
+            curl_close($ch);
+
+            //$successDeletion = @unlink($this->path . $name);
+
+            file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. RESPONSE. ' . $result . " \n", FILE_APPEND);
+
+            // Use this output in case of debugging
+            die(json_encode(array("result" => $result, "info" => $info, "data" => $content, "uri" => $uri, "successDeletion" => true)));
+            file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. INFO. ' . json_encode(array("info" => $info, "uri" => $uri)) . " \n", FILE_APPEND);
+            // Use this output for normal cases
+            //die(json_encode(array("result" => $result, "successDeletion" => true)));
         } catch (\Exception $e) {
+            file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] EXCEPTION ' . $e->getMessage() . " \n", FILE_APPEND);
         }
-
-        $content = json_encode($data);
-        //die($content);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $uri);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type:multipart/form-data"
-        ));
-
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $info   = curl_getinfo($ch);
-
-        $res    = json_decode($result);
-        curl_close($ch);
-
-        //$successDeletion = @unlink($this->path . $name);
-
-        file_put_contents($this->logPath, '[' . date("d-m-Y H:m:s") . '] API REQUEST ON. RESPONSE. ' . $result . " \n", FILE_APPEND);
-
-        // Use this output in case of debugging
-        die(json_encode(array("result" => $result, "info" => $info, "data" => $content, "uri" => $uri, "successDeletion" => true)));
-        // Use this output for normal cases
-        //die(json_encode(array("result" => $result, "successDeletion" => true)));
     }
 
 
@@ -175,4 +179,3 @@ class ChunkUploadHandler
         die(json_encode(array("success" => $success)));
     }
 }
-
