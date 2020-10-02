@@ -103,6 +103,7 @@ class ChunkUploadHandler
                 "tempfile"  => $this->path . $name,
                 "shortname" => $shortName,
                 "videoservice_storage_provider" => $S3_provider,
+                "institution" => ["id" => $idInst, "short_name" => $shortName]
             );
 
             if (!empty($userId)) {
